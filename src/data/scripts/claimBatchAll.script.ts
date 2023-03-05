@@ -11,8 +11,8 @@ import {
   CONSOLE_COLORS,
   MAIN_CONTRACT_WITH_BORROWER,
   getGasPrice,
-  paint, // @ts-ignore
-  getLatestBlock
+  paint // @ts-ignore
+  //getLatestBlock
 } from './api/scripts.api.js';
 import { ContractTransaction, ethers } from 'ethers';
 
@@ -172,9 +172,9 @@ function claimBatchGotchis(axios, CONSOLE_COLORS, paint) {
 
           const distinctgotchisIds = distinctgotchis.map((item) => item.gotchiId);
           const gasLimit = 35 * gasPriceGwei;
-          const block = await getLatestBlock();
-          let block_number = block.number;
-          let base_fee = parseFloat(ethers.utils.formatUnits(block.baseFeePerGas, 'gwei'));
+          //const block = await getLatestBlock();
+          //let block_number = block.number;
+          //let base_fee = parseFloat(ethers.utils.formatUnits(block.baseFeePerGas, 'gwei'));
 
           await MAIN_CONTRACT_WITH_BORROWER.batchClaimGotchiLending(distinctgotchisIds, {
             gasPrice: gasLimit,

@@ -19,6 +19,10 @@ export const getGasPrice = async () => {
   return await provider.getGasPrice();
 };
 
+export const getLatestBlock = async () => {
+  return await provider.getBlock('latest');
+};
+
 export const getNonceBorrower = async () => {
   return await provider.getTransactionCount(SCRIPT_BORROWER_WALLET_ADDRESS);
 };

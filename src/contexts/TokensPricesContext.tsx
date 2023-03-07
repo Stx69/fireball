@@ -1,7 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
 
-import { QuickswapApi } from 'api';
-
 import {
   ALPHA_CONTRACT,
   FOMO_CONTRACT,
@@ -11,8 +9,12 @@ import {
   KEK_CONTRACT,
   TokenTypes,
   USDC_CONTRACT,
-  WMATIC_CONTRACT
+  WMATIC_CONTRACT,
+  Erc1155Categories
 } from 'shared/constants';
+import { QuickswapApi, TheGraphApi } from 'api';
+
+import { ALLOY, ESSENCE } from 'shared/constants/forgeItems.constants';
 
 export const TokensPricesContext = createContext({});
 
@@ -20,14 +22,20 @@ export const TokensPricesContext = createContext({});
 export const TokensPricesContextProvider = (props) => {
   const [isPricesLoaded, setIsPricesLoaded] = useState(false);
   const [tokensPrices, setTokensPrices] = useState({});
-
   const fetchInterval = 300; // seconds
 
   useEffect(() => {
     const getTokensPrices = async function () {
       setIsPricesLoaded(false);
       const [ghstPrice, ghst] = await getGhstAndPriceToToken(GHST_CONTRACT, USDC_CONTRACT);
+      const [usdcPrice] = await getGhstAndPriceToToken(USDC_CONTRACT, GHST_CONTRACT);
       const [maticPrice] = await getGhstAndPriceToToken(WMATIC_CONTRACT, USDC_CONTRACT);
+      const [essencePriceGhst, alloyPriceGhst] = await Promise.all([
+        getForgeItemsERC1155AndPriceToToken(ESSENCE, Erc1155Categories.Essence),
+        getForgeItemsERC1155AndPriceToToken(ALLOY, Erc1155Categories.Alloy)
+      ]);
+      const alloyPriceUsdc = (alloyPriceGhst / usdcPrice).toFixed(4);
+      const essencePriceUsdc = (essencePriceGhst / usdcPrice).toFixed(4);
       const [fudToken, fomoToken, alphaToken, kekToken, gltrToken] = await Promise.all([
         QuickswapApi.getTokenData(FUD_CONTRACT),
         QuickswapApi.getTokenData(FOMO_CONTRACT),
@@ -48,6 +56,8 @@ export const TokensPricesContextProvider = (props) => {
         [TokenTypes.Alpha]: alphaPrice,
         [TokenTypes.Kek]: kekPrice,
         [TokenTypes.Gltr]: gltrPrice,
+        [TokenTypes.Alloy]: alloyPriceUsdc,
+        [TokenTypes.Essence]: essencePriceUsdc,
         [TokenTypes.Ghst]: ghstPrice,
         [TokenTypes.Matic]: maticPrice
       });
@@ -74,6 +84,16 @@ export const TokensPricesContextProvider = (props) => {
     const ghstPriceToToken = Number(ghstTokenRoute.midPrice.toSignificant(6));
 
     return [ghstPriceToToken, ghst];
+  };
+
+  const getForgeItemsERC1155AndPriceToToken = async (id: number | string, category: number | string) => {
+    const tokenPrice = await TheGraphApi.getErc1155Price(id, false, category, 'priceInWei', 'asc').then(
+      (response: any) => {
+        return response.price;
+      }
+    );
+
+    return tokenPrice;
   };
 
   const getTokenPrice = async (compareToken, compareTokenPrice, targetToken) => {

@@ -50,9 +50,10 @@ const sortings: SortingListItem[] = [
 const initialFilters: CustomAny = {
   hauntId: { ...filtersData.hauntId, divider: true },
   collateral: { ...filtersData.collateral, divider: true },
+  nrgTrait: { ...filtersData.nrgTrait },
   search: { ...filtersData.search }
 };
-const queryParamsOrder: string[] = ['haunt', 'collateral', 'search', 'sort', 'dir'];
+const queryParamsOrder: string[] = ['haunt', 'collateral', 'modifiedNumericTraits', 'search', 'sort', 'dir'];
 
 export function ClientBorrowed() {
   const navigate = useNavigate();

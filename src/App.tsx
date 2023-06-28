@@ -25,6 +25,7 @@ import {
   ParcelPage,
   Raffle
 } from 'pages';
+import Dune from 'pages/Dune/Dune';
 
 import { BalancesContextProvider } from 'contexts/BalancesContext';
 import { SnackbarContextProvider } from 'contexts/SnackbarContext';
@@ -77,6 +78,7 @@ export function App() {
             <Route path='anvil' element={<Anvil />} />
             <Route path='market/*' element={<Baazaar />} />
             <Route path='learn' element={<Learn />} />
+            <Route path='dune' element={<Dune />} />
             <Route path='lendings' element={<Lend />} />
             <Route path='explorer' element={<GhostExplorer />} />
             <Route path='autopet' element={<Autopet />} />

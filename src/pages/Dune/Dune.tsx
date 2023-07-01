@@ -4,165 +4,184 @@ import { Box, Typography } from '@mui/material';
 
 import { ContentWrapper } from 'components/Content/ContentWrapper';
 
-import DuneQueryResult from '/home/stx/dework/fireball/src/components/DuneQueryResults/DuneQueryResult';
+import DuneWhitlistedClaimed from '/home/stx/dework/fireball/src/components/DuneQueryResults/DuneWhitlistedClaimed';
+import DuneWhitlistedClaimedMonths from '/home/stx/dework/fireball/src/components/DuneQueryResults/DuneWhitlistedClaimedMonths';
 
-// https://dune.com/queries/2627038/4360949
+//https://api.dune.com/api/v1/query/2627038/results?api_key=<api_key>
 const Dune: React.FC = () => {
-  const query = `
-  WITH
-
-  allday AS ( 
-  SELECT date_trunc('day', evt_block_time) AS day , count(evt_block_time) /4 as claims_by_whitelist, 
-  SUM(CASE WHEN _alchemicaType = cast(0 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS TotalFUD,
-  SUM(CASE WHEN _alchemicaType = cast(1 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS TotalFOMO,
-  SUM(CASE WHEN _alchemicaType = cast(2 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS TotalALPHA,
-  SUM(CASE WHEN _alchemicaType = cast(3 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS TotalKEK
-  --,CONCAT ('<a href="https://app.aavegotchi.com/gotchi/',replace(cast("_gotchiId" as varchar), '\', '0'),'" target="_blank" >',replace(cast("_gotchiId" as varchar), '\', '0'),'</a>') as "Gotchi_id" , CONCAT ('<a href="https://gotchiverse.io/auction?tokenId=',replace(cast("_realmId" as varchar), '\', '0'),'" target="_blank" >',replace(cast("_realmId" as varchar), '\', '0'),'</a>') as "Realm_id"
-      FROM aavegotchi_polygon.RealmDiamond_evt_AlchemicaClaimed
-      WHERE cast("_gotchiId" AS bigint) IN (
-              SELECT "tokenId"
-              FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingExecuted a
-              WHERE whitelistId = {{whitelist}}
-                  AND NOT EXISTS (
-                      SELECT *
-                      FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingEnded b
-                      WHERE a.listingId = b.listingId
-                  )
-          ) 
-          AND evt_block_time > now() - interval '{{interval_day}}' day
-        
-      GROUP BY 1
-      order by day desc 
-  ) , 
-  bwidow as (
-  SELECT date_trunc('day',evt_block_time) as day,
-  count(evt_block_time) /4 as claims_by_bwidow, 
-  SUM(CASE WHEN _alchemicaType = cast(0 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS bwidowFUD,
-  SUM(CASE WHEN _alchemicaType = cast(1 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS bwidowFOMO,
-  SUM(CASE WHEN _alchemicaType = cast(2 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS bwidowALPHA,
-  SUM(CASE WHEN _alchemicaType = cast(3 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS bwidowKEK
-  from aavegotchi_polygon.RealmDiamond_evt_AlchemicaClaimed 
-  where cast("_gotchiID" as bigint) in (SELECT tokenId FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingExecuted a WHERE whitelistId = {{whitelist}} 
-   AND borrower = 0xcf1434054dceda1681bf0806f46d669fd25a347f
-    AND not EXISTS ( SELECT * FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingEnded b WHERE a.listingId = b.listingId ))
-    AND evt_block_time > now() - interval '{{interval_day}}' day
-   -- and  EXISTS (select * from RealmDiamond_evt_ChannelAlchemica m where listid.tokenId = cast(_gotchiID as bigint))
-  group by 1 
-  order by day desc), 
-  chronos as (
-  SELECT date_trunc('day',evt_block_time) as day,
-  count(evt_block_time) / 4 as claims_by_chronos, 
-  SUM(CASE WHEN _alchemicaType = cast(0 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS chronosFUD,
-  SUM(CASE WHEN _alchemicaType = cast(1 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS chronosFOMO,
-  SUM(CASE WHEN _alchemicaType = cast(2 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS chronosALPHA,
-  SUM(CASE WHEN _alchemicaType = cast(3 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS chronosKEK
-  from aavegotchi_polygon.RealmDiamond_evt_AlchemicaClaimed  
-  where cast("_gotchiID" as bigint) in (SELECT tokenId FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingExecuted a WHERE whitelistId = {{whitelist}} 
-   AND borrower = 0xa8fee56c46906fc783fc64cd97867da58800ef22
-    AND not EXISTS ( SELECT * FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingEnded b WHERE a.listingId = b.listingId ))
-    AND evt_block_time > now() - interval '{{interval_day}}' day
-   -- and  EXISTS (select * from RealmDiamond_evt_ChannelAlchemica m where listid.tokenId = cast(_gotchiID as bigint))
-  group by 1 
-  order by  day desc), 
-  
-  hope as (
-  SELECT date_trunc('day',evt_block_time) as day,
-  count(evt_block_time) / 4 as claims_by_hope, 
-  SUM(CASE WHEN _alchemicaType = cast(0 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS hopeFUD,
-  SUM(CASE WHEN _alchemicaType = cast(1 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS hopeFOMO,
-  SUM(CASE WHEN _alchemicaType = cast(2 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS hopeALPHA,
-  SUM(CASE WHEN _alchemicaType = cast(3 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS hopeKEK
-  from aavegotchi_polygon.RealmDiamond_evt_AlchemicaClaimed  
-  where cast("_gotchiID" as bigint) in (SELECT tokenId FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingExecuted a WHERE whitelistId = {{whitelist}} 
-   AND borrower = 0xa39a8e55a93c7a27ecb48eac86844bb1173e30da
-    AND not EXISTS ( SELECT * FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingEnded b WHERE a.listingId = b.listingId ))
-    AND evt_block_time > now() - interval '{{interval_day}}' day
-   -- and  EXISTS (select * from RealmDiamond_evt_ChannelAlchemica m where listid.tokenId = cast(_gotchiID as bigint))
-  group by 1 
-  order by day desc ),
-  
-  gor as (
-  SELECT date_trunc('day',evt_block_time) as day,
-  count(evt_block_time) / 4 as claims_by_gor, 
-  SUM(CASE WHEN _alchemicaType = cast(0 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS gorFUD,
-  SUM(CASE WHEN _alchemicaType = cast(1 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS gorFOMO,
-  SUM(CASE WHEN _alchemicaType = cast(2 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS gorALPHA,
-  SUM(CASE WHEN _alchemicaType = cast(3 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS gorKEK
-  from aavegotchi_polygon.RealmDiamond_evt_AlchemicaClaimed  
-  where cast("_gotchiID" as bigint) in (SELECT tokenId FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingExecuted a WHERE whitelistId = {{whitelist}} 
-   AND borrower = 0x3c1a885bd95f2fb025d36246f242b2bf1525e011
-    AND not EXISTS ( SELECT * FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingEnded b WHERE a.listingId = b.listingId ))
-    AND evt_block_time > now() - interval '{{interval_day}}' day
-   -- and  EXISTS (select * from RealmDiamond_evt_ChannelAlchemica m where listid.tokenId = cast(_gotchiID as bigint))
-  group by 1 
-  order by  day desc),
-  ron as (
-  SELECT date_trunc('day',evt_block_time) as day,
-  count(evt_block_time) / 4 as claims_by_ron, 
-  SUM(CASE WHEN _alchemicaType = cast(0 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS ronFUD,
-  SUM(CASE WHEN _alchemicaType = cast(1 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS ronFOMO,
-  SUM(CASE WHEN _alchemicaType = cast(2 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS ronALPHA,
-  SUM(CASE WHEN _alchemicaType = cast(3 as uint256) THEN CAST(CAST("_amount" as DECIMAL )/ 1e18 / 1.355932203389831 as Decimal (10,3)) END) AS ronKEK
-  from aavegotchi_polygon.RealmDiamond_evt_AlchemicaClaimed 
-  where cast("_gotchiID" as bigint) in (SELECT tokenId FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingExecuted a WHERE whitelistId = {{whitelist}} 
-   AND borrower = 0x1787de36fd5759fb003066b4fab1af2951421bc8
-    AND not EXISTS ( SELECT * FROM aavegotchi_polygon.aavegotchi_diamond_evt_GotchiLendingEnded b WHERE a.listingId = b.listingId ))
-    AND evt_block_time > now() - interval '{{interval_day}}' day
-  group by  1   
-  order by day desc)
-  
-  
-  SELECT allday.day,
-         allday.claims_by_whitelist,
-         allday.TotalFUD,
-         allday.TotalFOMO,
-         allday.TotalALPHA,
-         allday.TotalKEK,
-         bwidow.claims_by_bwidow,
-         bwidow.bwidowFUD,
-         bwidow.bwidowFOMO,
-         bwidow.bwidowALPHA,
-         bwidow.bwidowKEK,
-         chronos.claims_by_chronos,
-         chronos.chronosFUD,
-         chronos.chronosFOMO,
-         chronos.chronosALPHA,
-         chronos.chronosKEK,
-         hope.claims_by_hope,
-         hope.hopeFUD,
-         hope.hopeFOMO,
-         hope.hopeALPHA,
-         hope.hopeKEK,
-         gor.claims_by_gor,
-         gor.gorFUD,
-         gor.gorFOMO,
-         gor.gorALPHA,
-         gor.gorKEK,
-         ron.claims_by_ron,
-         ron.ronFUD,
-         ron.ronFOMO,
-         ron.ronALPHA,
-         ron.ronKEK
-  FROM allday
-  LEFT JOIN bwidow ON allday.day = bwidow.day   
-  LEFT JOIN chronos ON allday.day = chronos.day 
-  LEFT JOIN hope ON  allday.day = hope.day 
-  LEFT JOIN gor ON allday.day = gor.day
-  LEFT JOIN ron ON allday.day = ron.day
-  ORDER BY allday.day DESC;
-  
-  `;
+  // const jsonDataStatic = JSON.parse(`[{
+  //   "execution_id": "01H45W4VB7THC4X1K44QSXXXRH",
+  //   "query_id": 2627038,
+  //   "state": "QUERY_STATE_COMPLETED",
+  //   "submitted_at": "2023-06-30T10:03:58.696236Z",
+  //   "expires_at": "2023-09-28T10:04:04.634516Z",
+  //   "execution_started_at": "2023-06-30T10:03:58.711942Z",
+  //   "execution_ended_at": "2023-06-30T10:04:04.634514Z",
+  //   "result": {
+  //     "rows": [
+  //       {
+  //         "TotalALPHA": "531.265",
+  //         "TotalFOMO": "2381.875",
+  //         "TotalFUD": "106.436",
+  //         "TotalKEK": "44.705",
+  //         "bwidowALPHA": "0.000",
+  //         "bwidowFOMO": "426.813",
+  //         "bwidowFUD": "4.893",
+  //         "bwidowKEK": "0.000",
+  //         "chronosALPHA": null,
+  //         "chronosFOMO": null,
+  //         "chronosFUD": null,
+  //         "chronosKEK": null,
+  //         "claims_by_bwidow": 6,
+  //         "claims_by_chronos": null,
+  //         "claims_by_gor": null,
+  //         "claims_by_hope": 2,
+  //         "claims_by_ron": 1,
+  //         "claims_by_whitelist": 26,
+  //         "day": "2023-06-30 00:00:00.000 UTC",
+  //         "gorALPHA": null,
+  //         "gorFOMO": null,
+  //         "gorFUD": null,
+  //         "gorKEK": null,
+  //         "hopeALPHA": "239.215",
+  //         "hopeFOMO": "418.631",
+  //         "hopeFUD": "0.000",
+  //         "hopeKEK": "35.907",
+  //         "ronALPHA": "292.050",
+  //         "ronFOMO": "0.000",
+  //         "ronFUD": "101.543",
+  //         "ronKEK": "8.798"
+  //       },
+  //       {
+  //         "TotalALPHA": "1386.633",
+  //         "TotalFOMO": "2671.610",
+  //         "TotalFUD": "224.928",
+  //         "TotalKEK": "139.336",
+  //         "bwidowALPHA": "0.000",
+  //         "bwidowFOMO": "885.000",
+  //         "bwidowFUD": "4.169",
+  //         "bwidowKEK": "0.000",
+  //         "chronosALPHA": null,
+  //         "chronosFOMO": null,
+  //         "chronosFUD": null,
+  //         "chronosKEK": null,
+  //         "claims_by_bwidow": 15,
+  //         "claims_by_chronos": null,
+  //         "claims_by_gor": null,
+  //         "claims_by_hope": 2,
+  //         "claims_by_ron": 4,
+  //         "claims_by_whitelist": 37,
+  //         "day": "2023-06-29 00:00:00.000 UTC",
+  //         "gorALPHA": null,
+  //         "gorFOMO": null,
+  //         "gorFUD": null,
+  //         "gorKEK": null,
+  //         "hopeALPHA": "522.321",
+  //         "hopeFOMO": "0.000",
+  //         "hopeFUD": "0.000",
+  //         "hopeKEK": "78.402",
+  //         "ronALPHA": "864.312",
+  //         "ronFOMO": "472.000",
+  //         "ronFUD": "217.824",
+  //         "ronKEK": "60.934"
+  //       },
+  //       {
+  //         "TotalALPHA": "544.352",
+  //         "TotalFOMO": "1357.000",
+  //         "TotalFUD": "89.866",
+  //         "TotalKEK": "67.351",
+  //         "bwidowALPHA": "261.152",
+  //         "bwidowFOMO": "0.000",
+  //         "bwidowFUD": "87.366",
+  //         "bwidowKEK": "7.570",
+  //         "chronosALPHA": null,
+  //         "chronosFOMO": null,
+  //         "chronosFUD": null,
+  //         "chronosKEK": null,
+  //         "claims_by_bwidow": 1,
+  //         "claims_by_chronos": null,
+  //         "claims_by_gor": null,
+  //         "claims_by_hope": 1,
+  //         "claims_by_ron": 1,
+  //         "claims_by_whitelist": 18,
+  //         "day": "2023-06-28 00:00:00.000 UTC",
+  //         "gorALPHA": null,
+  //         "gorFOMO": null,
+  //         "gorFUD": null,
+  //         "gorKEK": null,
+  //         "hopeALPHA": "283.200",
+  //         "hopeFOMO": "0.000",
+  //         "hopeFUD": "0.000",
+  //         "hopeKEK": "59.781",
+  //         "ronALPHA": "0.000",
+  //         "ronFOMO": "472.000",
+  //         "ronFUD": "0.000",
+  //         "ronKEK": "0.000"
+  //       }
+  //     ],
+  //     "metadata": {
+  //       "column_names": [
+  //         "day",
+  //         "claims_by_whitelist",
+  //         "TotalFUD",
+  //         "TotalFOMO",
+  //         "TotalALPHA",
+  //         "TotalKEK",
+  //         "claims_by_bwidow",
+  //         "bwidowFUD",
+  //         "bwidowFOMO",
+  //         "bwidowALPHA",
+  //         "bwidowKEK",
+  //         "claims_by_chronos",
+  //         "chronosFUD",
+  //         "chronosFOMO",
+  //         "chronosALPHA",
+  //         "chronosKEK",
+  //         "claims_by_hope",
+  //         "hopeFUD",
+  //         "hopeFOMO",
+  //         "hopeALPHA",
+  //         "hopeKEK",
+  //         "claims_by_gor",
+  //         "gorFUD",
+  //         "gorFOMO",
+  //         "gorALPHA",
+  //         "gorKEK",
+  //         "claims_by_ron",
+  //         "ronFUD",
+  //         "ronFOMO",
+  //         "ronALPHA",
+  //         "ronKEK"
+  //       ],
+  //       "result_set_bytes": 912,
+  //       "total_row_count": 3,
+  //       "datapoint_count": 93,
+  //       "pending_time_millis": 15,
+  //       "execution_time_millis": 5922
+  //     }
+  //   }
+  // }]
+  // `);
 
   return (
     <ContentWrapper>
       {/* Content */}
       <Box sx={{ padding: 2 }}>
         <Typography variant='h6' sx={{ mb: 1 }}>
-          Dune Graphs
+          Dune Graphs Fireball pilots
         </Typography>
 
-        <h1>Dune Query Result</h1>
-        <DuneQueryResult query={query} />
+        {/* <h1>Whitelisted Claimed offline</h1> */}
+        {/* <DuneQueryResult query={query} /> */}
+        {/* <DuneWhitlistedClaimedCopy /> */}
+
+        <h1>Whitelisted Claimed Daily online</h1>
+
+        <DuneWhitlistedClaimed />
+
+        <h1>Whitelisted Claimed Monthly Whole dao online</h1>
+
+        <DuneWhitlistedClaimedMonths />
       </Box>
       {/* Sidebar */}
       <Box sx={{ padding: 2 }}>

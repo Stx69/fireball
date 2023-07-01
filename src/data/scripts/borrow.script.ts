@@ -32,13 +32,96 @@ interface Gotchi {
 }
 // Whitelist hardcoded id "717" 6110
 const whitelistID = '717';
-const MAX_BORROWED = 5;
-const MAX_KINSHIP = 2000;
-const MIN_KINSHIP = 1000;
+const MAX_BORROWED = 10;
+const MAX_KINSHIP = 1000;
+const MIN_KINSHIP = 750;
 // Interval repeater and tx cost limit
 const repeatTimer = 1 * 15 * 1000;
 const txCostLimit = 180 * 1e9;
 
+const fixedIds = [
+  '2647',
+  '2929',
+  '2615',
+  '3649',
+  '2318',
+  '2735',
+  '3385',
+  '3854',
+  '2337',
+  '4074',
+  '273',
+  '2938',
+  '4070',
+  '4071',
+  '3320',
+  '4194',
+  '2997',
+  '3614',
+  '3419',
+  '4075',
+  '4195',
+  '2619',
+  '231',
+  '2248',
+  '3658',
+  '2406',
+  '4139',
+  '3033',
+  '2550',
+  '4051',
+  '3098',
+  '23160',
+  '23974',
+  '23631',
+  '24391',
+  '24556',
+  '23590',
+  '24547',
+  '22473',
+  '23709',
+  '24377',
+  '21906',
+  '22831',
+  '23174',
+  '23280',
+  '24395',
+  '22987',
+  '24381',
+  '22298',
+  '23673',
+  '22451',
+  '22855',
+  '24389',
+  '22674',
+  '22990',
+  '23652',
+  '23855',
+  '3150',
+  '22534',
+  '24747',
+  '23688',
+  '22891',
+  '22982',
+  '22446',
+  '23508',
+  '24077',
+  '23821',
+  '22606',
+  '23479',
+  '24602',
+  '22797',
+  '23285',
+  '2595',
+  '16342',
+  '24418',
+  '14491',
+  '16433',
+  '24861',
+  '13225',
+  '419'
+];
+const FARMER_1 = '0xdcf4dbd159afc0fd71bcf1bfa97ccf23646eabc0';
 let interval;
 let totalBorrowedTemp = 0;
 function onlyWhitelistedMember(axios, CONSOLE_COLORS, paint) {
@@ -71,7 +154,7 @@ function onlyWhitelistedMember(axios, CONSOLE_COLORS, paint) {
 
 function borrowGotchis(axios, CONSOLE_COLORS, paint) {
   const borrowQuery = `{ 
-  gotchiLendings (first: 200 where: {whitelist: "${whitelistID}" } orderDirection: desc, orderBy: id) {
+  gotchiLendings (first: 500 where: {whitelist: "${whitelistID}" } orderDirection: desc, orderBy: id) {
     id
     whitelist {
       ownerAddress
@@ -132,8 +215,9 @@ function borrowGotchis(axios, CONSOLE_COLORS, paint) {
             !o.borrower &&
             o.lender &&
             o.kinship > MIN_KINSHIP &&
-            o.kinship < MAX_KINSHIP &&
-            o.splitBorrower > 10
+            o.kinship < MAX_KINSHIP && //&& o.splitBorrower > 10
+            o.originalOwner.toLocaleLowerCase() === FARMER_1.toLocaleLowerCase()
+          // &&fixedIds.includes(o.gotchiId)
         );
         //debugger;// distinct and sort result of search
         const distinctgotchis = [...new Map(gotchisFiltred.map((item) => [item['gotchiId'], item])).values()].sort(

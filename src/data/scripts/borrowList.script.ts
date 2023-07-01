@@ -32,7 +32,7 @@ const whitelistID = '717';
 const MAX_BORROWED = 150;
 const MAX_KINSHIP = 2000;
 const MIN_KINSHIP = 1;
-//const FARMER_1 = '0xdcf4dbd159afc0fd71bcf1bfa97ccf23646eabc0';
+const FARMER_1 = '0xdcf4dbd159afc0fd71bcf1bfa97ccf23646eabc0';
 // Interval repeater and tx cost limit
 
 let interval;
@@ -127,7 +127,8 @@ function borrowGotchis(axios, CONSOLE_COLORS, paint) {
             !o.borrower &&
             o.lender &&
             o.kinship > MIN_KINSHIP &&
-            o.kinship < MAX_KINSHIP && o.splitBorrower > 10 //&& o.originalOwner.toLocaleLowerCase() === FARMER_1
+            o.kinship < MAX_KINSHIP && //&& o.splitBorrower > 10
+            o.originalOwner.toLocaleLowerCase() === FARMER_1.toLocaleLowerCase()
         );
         //debugger;// distinct and sort result of search
         const distinctgotchis = [...new Map(gotchisFiltred.map((item) => [item['gotchiId'], item])).values()].sort(

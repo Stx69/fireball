@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import axios from 'axios';
+import fetch, { Headers } from 'node-fetch';
 
+const { DUNE_API_KEY } = process.env;
 interface DuneQueryResultProps {
   query: string;
 }
@@ -14,10 +15,27 @@ const DuneQueryResult: React.FC<DuneQueryResultProps> = ({ query }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('https://dune/api/queries/2627038/4360949/results', {
-          sql: query
+        const params = { query_parameters: { interval_day: '2', whitelist: '717' } };
+
+        // Add the API key to a header object
+
+        const body = JSON.stringify(params);
+        const meta = {
+          'dune-api-key': DUNE_API_KEY
+        };
+        const header = new Headers(meta);
+
+        const response = await fetch('https://api.dune.com/api/v1/query/2627038/execute', {
+          method: 'POST',
+          headers: header,
+          body: body // This is where we pass the parameters
         });
-        setResult(response.data.result); // Extract the result from the response object
+        if (response.ok) {
+          setResult(await response.json()); // Extract the result from the response object
+          console.log(response);
+        } else {
+          console.log('Error:', response.status);
+        }
       } catch (error: CustomAny) {
         setError(error.message);
       } finally {

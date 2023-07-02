@@ -53,27 +53,27 @@ export const SCRIPT_WALLET_NONCE = async () => {
 
 export const MAIN_CONTRACT_WITH_SIGNER = new ethers.Contract(MAIN_CONTRACT, MAIN_ABI, SCRIPT_WALLET);
 export const MAIN_CONTRACT_WITH_BORROWER = new ethers.Contract(MAIN_CONTRACT, MAIN_ABI, SCRIPT_BORROWER_WALLET);
-
+// @ts-ignore
 export const TILES_CONTRACT_WITH_SIGNER = new ethers.Contract(TILES_CONTRACT, TILES_ABI, SCRIPT_WALLET);
-
+// @ts-ignore
 export const INSTALLATIONS_CONTRACT_WITH_SIGNER = new ethers.Contract(
   INSTALLATION_CONTRACT,
   INSTALLATIONS_ABI,
   SCRIPT_WALLET
 );
-
+// @ts-ignore
 export const TOKEN_CONTRACT_WITH_SIGNER = (contract: string) => {
   return new ethers.Contract(contract, TOKEN_ABI, SCRIPT_WALLET);
 };
-
+// @ts-ignore
 export const TILES_CONTRACT_WITH_SIGNER = new ethers.Contract(TILES_CONTRACT, TILES_ABI, SCRIPT_WALLET);
-
+// @ts-ignore
 export const INSTALLATIONS_CONTRACT_WITH_SIGNER = new ethers.Contract(
   INSTALLATION_CONTRACT,
   INSTALLATIONS_ABI,
   SCRIPT_WALLET
 );
-
+// @ts-ignore
 export const TOKEN_CONTRACT_WITH_SIGNER = (contract: string) => {
   return new ethers.Contract(contract, TOKEN_ABI, SCRIPT_WALLET);
 };

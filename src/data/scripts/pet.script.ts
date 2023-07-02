@@ -133,6 +133,7 @@ function pet() {
           console.log(`⌛ Next timer in minutes: ${paint(repeatTimer / 60 / 1000, CONSOLE_COLORS.Green)}`);
         });
 
-  console.log(`🧑 owner: ${paint(PET_ADDRESS, CONSOLE_COLORS.Cyan)}`);
-  console.log(`🧑 operator: ${paint(SCRIPT_WALLET_ADDRESS, CONSOLE_COLORS.Cyan)}`);
+      console.log(`🧑 owner: ${paint(PET_ADDRESS, CONSOLE_COLORS.Cyan)}`);
+      console.log(`🧑 operator: ${paint(SCRIPT_WALLET_ADDRESS, CONSOLE_COLORS.Cyan)}`);
+    });
 }

@@ -263,7 +263,9 @@ export const erc1155ListingsBatchQuery = (
         }
     `;
 };
-
+// availableAlchemica
+// capacities
+// harvestRates
 export const realmQuery = (address: CustomAny, skip: CustomAny): string => {
   return `{
     parcels(
@@ -287,9 +289,7 @@ export const realmQuery = (address: CustomAny, skip: CustomAny): string => {
       alphaBoost
       kekBoost
       alchemica
-      availableAlchemica
-      capacities
-      harvestRates
+
       surveys {
         id
         surveyed
@@ -360,9 +360,6 @@ export const parcelQuery = (id: CustomAny): string => {
         alphaBoost
         kekBoost
         alchemica
-        availableAlchemica
-        capacities
-        harvestRates
         surveys {
             id
             surveyed

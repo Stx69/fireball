@@ -1,6 +1,6 @@
 import { TheGraphApi } from 'api';
-import { RealmApi } from 'api/realm.api';
 
+// import { RealmApi } from 'api/realm.api';
 import { AppThunk } from 'core/store/store';
 
 import { InstallationTypeNames } from 'shared/constants';

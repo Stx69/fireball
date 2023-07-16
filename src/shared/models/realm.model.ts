@@ -61,6 +61,9 @@ export interface Parcel {
   historicalPrices?: string[];
   timesTraded?: number;
   timePurchased?: number;
+  availableAlchemica: ParcelAlchemica[];
+  capacities: ParcelAlchemica[];
+  harvestRates: ParcelAlchemica[];
 }
 
 export interface ParcelDTO extends Parcel {

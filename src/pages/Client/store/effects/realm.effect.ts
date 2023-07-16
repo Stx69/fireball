@@ -31,16 +31,6 @@ export const onLoadRealm =
 
         const cooldownClaim: number = parcel.lastClaimed ? 28800 : 0;
 
-        const realmCapacitiesPromise = RealmApi.getRealmCapacities(parcel.id);
-        const realmHarvestRatesPromise = RealmApi.getRealmHarvestRates(parcel.id);
-        const realmAvailableAlchemicaPromise = RealmApi.getRealmAvailableAlchemica(parcel.id);
-
-        const [realmCapacities, realmHarvestRates, realmAvailableAlchemica] = await Promise.all([
-          realmCapacitiesPromise,
-          realmHarvestRatesPromise,
-          realmAvailableAlchemicaPromise
-        ]);
-
         const getParcelUpgradeQueueCapacitytemp = installations.filter(
           (installation: ParcelInstallationVM) => installation.id > 128 && installation.id < 138
         );
@@ -62,9 +52,6 @@ export const onLoadRealm =
           cooldown,
           nextChannel: parcel.lastChanneled + cooldown,
           nextClaim: parcel.lastClaimed + cooldownClaim,
-          capacities: realmCapacities,
-          harvestRates: realmHarvestRates,
-          claimAvailableAlchemica: realmAvailableAlchemica,
           upgradeCap: getParcelUpgradeQueueCapacity + 1,
           upgradeQueue: getParcelUpgradeQueueLength
         };

@@ -298,7 +298,7 @@ export function Lend() {
     const selectedGotchiIdsJSON = localStorage.getItem('selectedGotchiIds');
     const selectedGotchiIds = selectedGotchiIdsJSON ? JSON.parse(selectedGotchiIdsJSON) : [];
     // Use the selectedGotchiIds array in your logic here
-
+    console.log(selectedGotchiIds);
     //debugger;
 
     // selectedGotchiIds.forEach( (gotchiId) => {

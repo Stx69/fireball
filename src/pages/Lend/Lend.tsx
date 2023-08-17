@@ -301,19 +301,19 @@ export function Lend() {
 
     //debugger;
 
-    selectedGotchiIds.forEach( (gotchiId) => {
-      // Process each gotchiId
-     // const gotchi: CustomAny = modifiedLendings.filter((gotchi) => gotchi.id === gotchiId);
+    // selectedGotchiIds.forEach( (gotchiId) => {
+    // Process each gotchiId
+    // const gotchi: CustomAny = modifiedLendings.filter((gotchi) => gotchi.id === gotchiId);
 
-      // const tempTx =  MAIN_CONTRACT_WITH_CONNECTED_WALLET.agreeGotchiLending(
-      //   gotchi.listingsId,
-      //   gotchi.gotchiId,
-      //   0,
-      //   gotchi.period,
-      //   [gotchi.splitOwner, gotchi.gotchi, gotchi.splitOther]
-      // );
-      // ...
-    });
+    // const tempTx =  MAIN_CONTRACT_WITH_CONNECTED_WALLET.agreeGotchiLending(
+    //   gotchi.listingsId,
+    //   gotchi.gotchiId,
+    //   0,
+    //   gotchi.period,
+    //   [gotchi.splitOwner, gotchi.gotchi, gotchi.splitOther]
+    // );
+    // ...
+    // });
   }, [modifiedLendings]);
 
   return (

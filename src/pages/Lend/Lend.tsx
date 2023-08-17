@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -293,6 +294,28 @@ export function Lend() {
     FilterUtils.exportData(modifiedLendings, 'lendings');
   }, [modifiedLendings]);
 
+  const onSendBatchLend = useCallback((): void => {
+    const selectedGotchiIdsJSON = localStorage.getItem('selectedGotchiIds');
+    const selectedGotchiIds = selectedGotchiIdsJSON ? JSON.parse(selectedGotchiIdsJSON) : [];
+    // Use the selectedGotchiIds array in your logic here
+
+    debugger;
+
+    selectedGotchiIds.forEach( (gotchiId) => {
+      // Process each gotchiId
+      const gotchi: CustomAny = modifiedLendings.filter((gotchi) => gotchi.id === gotchiId);
+
+      // const tempTx =  MAIN_CONTRACT_WITH_CONNECTED_WALLET.agreeGotchiLending(
+      //   gotchi.listingsId,
+      //   gotchi.gotchiId,
+      //   0,
+      //   gotchi.period,
+      //   [gotchi.splitOwner, gotchi.gotchi, gotchi.splitOther]
+      // );
+      // ...
+    });
+  }, [modifiedLendings]);
+
   return (
     <ContentWrapper>
       <>
@@ -384,6 +407,10 @@ export function Lend() {
           </Button>
           <Button variant='contained' color='secondary' size='small' onClick={onExportData}>
             Export data (.json)
+          </Button>
+
+          <Button variant='contained' color='secondary' size='small' onClick={onSendBatchLend}>
+            Send batch Lend
           </Button>
         </div>
       </>

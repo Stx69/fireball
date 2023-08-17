@@ -1,4 +1,7 @@
+import { useState } from 'react';
+
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { Button } from '@mui/material';
 
 import classNames from 'classnames';
 import { Duration } from 'luxon';
@@ -40,6 +43,22 @@ export function GotchiLending({ gotchi }: { gotchi: CustomAny }) {
         })}
       </>
     );
+  };
+
+  const [selectedGotchiIds, setSelectedGotchiIds] = useState<string[]>([]);
+
+  const handleSelectButtonClick = () => {
+    const gotchiId = gotchi;
+
+    const selectedGotchiIdsJSON = localStorage.getItem('selectedGotchiIds');
+    const selectedGotchiIds = selectedGotchiIdsJSON ? JSON.parse(selectedGotchiIdsJSON) : [];
+
+    const updatedSelectedGotchiIds = selectedGotchiIds.includes(gotchiId.id)
+      ? selectedGotchiIds.filter((id) => id !== gotchiId.id)
+      : [...selectedGotchiIds, gotchiId.id];
+
+    setSelectedGotchiIds(updatedSelectedGotchiIds);
+    localStorage.setItem('selectedGotchiIds', JSON.stringify(updatedSelectedGotchiIds));
   };
 
   return (
@@ -93,6 +112,18 @@ export function GotchiLending({ gotchi }: { gotchi: CustomAny }) {
       </div>
 
       <ViewInAppButton link={`https://app.aavegotchi.com/lending/${gotchi.lendingId}`}>Aavegotchi.com</ViewInAppButton>
+
+      <Button
+        fullWidth
+        size='small'
+        onClick={handleSelectButtonClick}
+        style={{
+          backgroundColor: selectedGotchiIds.includes(gotchi.id) ? 'darkviolet' : 'inherit',
+          color: selectedGotchiIds.includes(gotchi.id) ? 'white' : 'black'
+        }}
+      >
+        {selectedGotchiIds.includes(gotchi.id) ? 'Deselect' : 'Select'}
+      </Button>
     </div>
   );
 }

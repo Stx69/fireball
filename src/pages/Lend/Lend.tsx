@@ -299,11 +299,11 @@ export function Lend() {
     const selectedGotchiIds = selectedGotchiIdsJSON ? JSON.parse(selectedGotchiIdsJSON) : [];
     // Use the selectedGotchiIds array in your logic here
 
-    debugger;
+    //debugger;
 
     selectedGotchiIds.forEach( (gotchiId) => {
       // Process each gotchiId
-      const gotchi: CustomAny = modifiedLendings.filter((gotchi) => gotchi.id === gotchiId);
+     // const gotchi: CustomAny = modifiedLendings.filter((gotchi) => gotchi.id === gotchiId);
 
       // const tempTx =  MAIN_CONTRACT_WITH_CONNECTED_WALLET.agreeGotchiLending(
       //   gotchi.listingsId,

@@ -35,11 +35,10 @@ export const onLoadRealm =
         const realmHarvestRatesPromise = RealmApi.getRealmHarvestRates(parcel.id);
         const realmAvailableAlchemicaPromise = RealmApi.getRealmAvailableAlchemica(parcel.id);
 
-        const [realmCapacities, realmHarvestRates, realmAvailableAlchemica] = await Promise.all([
-          realmCapacitiesPromise,
-          realmHarvestRatesPromise,
-          realmAvailableAlchemicaPromise
-        ]);
+        const realmCapacities = await Promise.all([realmCapacitiesPromise]).then();
+        const realmHarvestRates = await Promise.all([realmHarvestRatesPromise]).then();
+
+        const realmAvailableAlchemica = await Promise.all([realmAvailableAlchemicaPromise]).then();
 
         const getParcelUpgradeQueueCapacitytemp = installations.filter(
           (installation: ParcelInstallationVM) => installation.id > 128 && installation.id < 138

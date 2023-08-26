@@ -61,9 +61,6 @@ export interface Parcel {
   historicalPrices?: string[];
   timesTraded?: number;
   timePurchased?: number;
-  capacities: ParcelAlchemica;
-  harvestRates: ParcelAlchemica;
-  claimAvailableAlchemica: ParcelAlchemica;
 }
 
 export interface ParcelDTO extends Parcel {
@@ -90,6 +87,9 @@ export interface RealmBase extends Parcel {
 export interface RealmDTO extends RealmBase {
   installations: ParcelInstallationDTO[];
   tiles: ParcelTileDTO[];
+  capacities: ParcelAlchemica;
+  harvestRates: ParcelAlchemica;
+  claimAvailableAlchemica: ParcelAlchemica;
 }
 
 export interface RealmVM extends RealmBase {

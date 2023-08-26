@@ -13,6 +13,7 @@ import PercentIcon from '@mui/icons-material/Percent';
 import { Button, ToggleButton } from '@mui/material';
 
 import classNames from 'classnames';
+
 import qs from 'query-string';
 
 import { EthersApi, TheGraphApi } from 'api';
@@ -294,26 +295,52 @@ export function Lend() {
     FilterUtils.exportData(modifiedLendings, 'lendings');
   }, [modifiedLendings]);
 
+  // const onSendBatchLend = useCallback((): void => {
+  //   const selectedGotchiIdsJSON = localStorage.getItem('selectedGotchiIds');
+  //   const selectedGotchiIds = selectedGotchiIdsJSON ? JSON.parse(selectedGotchiIdsJSON) : [];
+  //   // Use the selectedGotchiIds array in your logic here
+
+  //   //debugger;
+
+  //   selectedGotchiIds.forEach((gotchiId) => {
+  //     debugger; // Process each gotchiId
+  //     const gotchi: CustomAny = modifiedLendings.filter((gotchi) => gotchi.id === gotchiId);
+  //     console.log(gotchi[0]);
+  //     // const tempTx =  MAIN_CONTRACT_WITH_CONNECTED_WALLET.agreeGotchiLending(
+  //     //   gotchi[0].listingsId,
+  //     //   gotchi[0].gotchiId,
+  //     //   0,
+  //     //   gotchi[0].period,
+  //     //   [gotchi[0].splitOwner, gotchi[0].gotchi, gotchi[0].splitOther]
+  //     // );
+  //     // ...
+  //   });
+  // }, [modifiedLendings]);
+
   const onSendBatchLend = useCallback((): void => {
     const selectedGotchiIdsJSON = localStorage.getItem('selectedGotchiIds');
     const selectedGotchiIds = selectedGotchiIdsJSON ? JSON.parse(selectedGotchiIdsJSON) : [];
-    // Use the selectedGotchiIds array in your logic here
-    console.log(selectedGotchiIds);
-    //debugger;
 
-    // selectedGotchiIds.forEach( (gotchiId) => {
-    // Process each gotchiId
-    // const gotchi: CustomAny = modifiedLendings.filter((gotchi) => gotchi.id === gotchiId);
+    selectedGotchiIds.forEach((gotchiId) => {
+      const gotchi: CustomAny = modifiedLendings.filter((gotchi) => gotchi.id === gotchiId);
+      console.log(gotchi[0]);
 
-    // const tempTx =  MAIN_CONTRACT_WITH_CONNECTED_WALLET.agreeGotchiLending(
-    //   gotchi.listingsId,
-    //   gotchi.gotchiId,
-    //   0,
-    //   gotchi.period,
-    //   [gotchi.splitOwner, gotchi.gotchi, gotchi.splitOther]
-    // );
-    // ...
-    // });
+      // try {
+
+      //   await MAIN_CONTRACT_WITH_CONNECTED_WALLET.agreeGotchiLending(
+      //     gotchi[0].listingsId,
+      //     gotchi[0].gotchiId,
+      //     0,
+      //     gotchi[0].period,
+      //     [gotchi[0].splitOwner, gotchi[0].gotchi, gotchi[0].splitOther]
+      //   );
+
+      //   console.log('Transaction sent!');
+      // } catch (error) {
+      //   console.error('Error while sending transaction:', error);
+      // }
+      
+    });
   }, [modifiedLendings]);
 
   return (

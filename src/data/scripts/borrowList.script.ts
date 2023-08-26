@@ -29,10 +29,12 @@ interface Gotchi {
 }
 // Whitelist hardcoded id "717" 6110
 const whitelistID = '717';
-const MAX_BORROWED = 150;
+const MAX_BORROWED = 30;
 const MAX_KINSHIP = 2000;
-const MIN_KINSHIP = 1;
-const FARMER_1 = '0xdcf4dbd159afc0fd71bcf1bfa97ccf23646eabc0';
+const MIN_KINSHIP = 1200;
+const FARMER_1 = '0x2b1aadcf1bf5acbae91d37a042ecbe1c48278988';
+
+//const FARMER_1 = '0xdcf4dbd159afc0fd71bcf1bfa97ccf23646eabc0';
 // Interval repeater and tx cost limit
 
 let interval;

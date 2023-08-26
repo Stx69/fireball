@@ -49,16 +49,13 @@ export function GotchiLending({ gotchi }: { gotchi: CustomAny }) {
 
   const handleSelectButtonClick = () => {
     const gotchiId = gotchi;
-
     const selectedGotchiIdsJSON = localStorage.getItem('selectedGotchiIds');
     const selectedGotchiIds = selectedGotchiIdsJSON ? JSON.parse(selectedGotchiIdsJSON) : [];
 
-    const updatedSelectedGotchiIds = selectedGotchiIds.includes(gotchiId.id)
-      ? selectedGotchiIds.filter((id) => id !== gotchiId.id)
-      : [...selectedGotchiIds, gotchiId.id];
-
-    setSelectedGotchiIds(updatedSelectedGotchiIds);
-    localStorage.setItem('selectedGotchiIds', JSON.stringify(updatedSelectedGotchiIds));
+    if (!selectedGotchiIds.includes(gotchiId.id)) {
+      setSelectedGotchiIds([...selectedGotchiIds, gotchiId.id]);
+      localStorage.setItem('selectedGotchiIds', JSON.stringify([...selectedGotchiIds, gotchiId.id]));
+    }
   };
 
   return (
